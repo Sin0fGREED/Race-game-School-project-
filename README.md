@@ -1,1 +1,2 @@
-# Race-game-School-project-
+# RAcing-game-challenge-week
+ School project with python
