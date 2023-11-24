@@ -1,2 +1,5 @@
 # Racing-game-challenge-week
- School project with python
+
+# Hello people,
+
+School gave me an assingments to make a racegame with the use of Pygame.
