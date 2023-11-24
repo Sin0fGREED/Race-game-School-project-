@@ -7,7 +7,7 @@ School gave me an assingments to make a racegame with the use of Pygame.
 ### What do you need?:
 1. `pip install pygame`
 2. `pip install pygame pytmx`
-3. `python main.py`
+3. `Python`
 
 ### How to commit features to your own branch
 1. `git checkout -b nieuwe-branch-naam main`
