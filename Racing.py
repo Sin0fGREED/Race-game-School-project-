@@ -1,4 +1,3 @@
-import pygame
 import pygame # Import pygame module
 import sys  # Import sys module
 import pytmx # Import pytmx module
