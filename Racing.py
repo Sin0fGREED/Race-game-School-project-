@@ -46,20 +46,25 @@ scaled_car_image = pygame.transform.scale(original_car_image, (7 * MAP_SCALE, 5 
 # Create a rectangle for the player's car
 player_car_rect = scaled_car_image.get_rect()  # Create a rectangle for the player's car
 player_car_rect.center = (150, 85)  # Initial position of the player's car
+
 player_velocity = pygame.Vector2(0, 0)  # Initial velocity of the player's car
 player_angle = 0  # Initial angle of the player's car
 
 # Load music and set volume
 pygame.mixer.music.load('Music.wav')  # Load music
-pygame.mixer.music.set_volume(0.15)  # 15% volume (0 to 1.0)
+pygame.mixer.music.set_volume(0)  # 15% volume (0 to 1.0)
 
 # Start playing music (you can specify the number of loops)
 pygame.mixer.music.play(-1)  # -1 means play indefinitely
 
 # Tile ID for collision (the tile ID is 253)
-COLLISION_TILE_ID = 253  # Tile ID for collision (the tile ID is 253)
+COLLISION_TILE_ID = 83  # Tile ID for collision (the tile ID is 253)
 
 # Game loop
+def screen_to_world(screen_x, screen_y):
+    world_x = (screen_x / WIDTH ) * 29  
+    world_y = (screen_y / HEIGHT) * 16  
+    return [world_x, world_y]
 running = True  # Boolean variable to control the game loop
 while running: # Loop that runs while the game is running
     for event in pygame.event.get(): # Loop that gets all the events that happen in the game
@@ -73,13 +78,39 @@ while running: # Loop that runs while the game is running
 
     # Check if the player's car is colliding with the road
     new_player_rect = player_car_rect.move(player_velocity) # Get the new position of the player's car
-    for x in range(int(new_player_rect.left / scaled_tilewidth), int(new_player_rect.right / scaled_tilewidth)): # Loop that checks the horizontal tiles
-        for y in range(int(new_player_rect.top / scaled_tileheight), int(new_player_rect.bottom / scaled_tileheight)): # Loop that checks the vertical tiles
-            tile = tmx_map.get_tile_layer_by_name("BORDERS").get_tile_gid(x, y) # Get the tile ID
-            if tile == COLLISION_TILE_ID:
-            # Collision detected, prevent movement
-                player_velocity.x = 0
-                player_velocity.y = 0
+    # for x in range(int(new_player_rect.left / scaled_tilewidth), int(new_player_rect.right / scaled_tilewidth)):
+    #     for y in range(int(new_player_rect.top / scaled_tileheight), int(new_player_rect.bottom / scaled_tileheight)):
+    x = (player_car_rect.center[0])
+    y = (player_car_rect.center[1])
+    x = math.floor(screen_to_world(x, y)[0])
+    y = math.floor(screen_to_world(x, y)[1])
+    xivo = screen_to_world(x * 29, y * 16)[0]
+    yivo = screen_to_world(x * 29, y * 16)[1]
+    print("Y=" ,yivo)
+    print("x=" ,xivo)
+    tile_layer = tmx_map.get_layer_by_name("BORDERS")
+    tile = tile_layer.data[y][x]
+    OUCH = False
+    if tile == COLLISION_TILE_ID:
+        OUCH = True
+        player_velocity.x = 0
+        player_velocity.y = 0
+    
+        if xivo >= x and OUCH:
+            player_velocity.x = 1
+            OUCH = False
+        elif xivo <= x and OUCH:
+            player_velocity.x = -1
+            OUCH = False
+        if yivo >= y and OUCH:
+            player_velocity.y = 1
+            OUCH = False
+        elif yivo <= y and OUCH:
+            player_velocity.y = -1
+            OUCH = False
+
+       
+
 
     # Move the player's car
     player_car_rect.x += player_velocity.x
