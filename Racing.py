@@ -3,7 +3,8 @@ import sys  # Import sys module
 import pytmx # Import pytmx module
 import math # Import math module
 import pygame.mixer # Import pygame mixer module
-
+from vector2d import Vector2D
+# pip install vector2d.py
 
 # Initializes Pygame and pygame mixer
 
@@ -41,11 +42,12 @@ scaled_height = tmx_map.height * scaled_tileheight  # Calculate the scaled heigh
 # Create a surface for the scaled map
 original_car_image = pygame.Surface((8, 8))  # Create a surface for the original car image
 original_car_image.fill(CAR_COLOR)  # Fill the surface with the car color
-scaled_car_image = pygame.transform.scale(original_car_image, (7 * MAP_SCALE, 5 * MAP_SCALE))  # Scale the car image
+scaled_car_image = pygame.transform.scale(original_car_image, (5, 5))  # Scale the car image
 
 # Create a rectangle for the player's car
 player_car_rect = scaled_car_image.get_rect()  # Create a rectangle for the player's car
-player_car_rect.center = (150, 85)  # Initial position of the player's car
+player_car_rect.x = 150
+player_car_rect.y = 85
 
 player_velocity = pygame.Vector2(0, 0)  # Initial velocity of the player's car
 player_angle = 0  # Initial angle of the player's car
@@ -60,11 +62,28 @@ pygame.mixer.music.play(-1)  # -1 means play indefinitely
 # Tile ID for collision (the tile ID is 253)
 COLLISION_TILE_ID = 83  # Tile ID for collision (the tile ID is 253)
 
-# Game loop
-def screen_to_world(screen_x, screen_y):
-    world_x = (screen_x / WIDTH ) * 29  
-    world_y = (screen_y / HEIGHT) * 16  
+# def getQuadrant(x, y, centerX, centerY):
+    # rotatedX = x * math.cos(math.pi / 4) - y * math.sin(math.pi / 4)
+    # rotatedY = x * math.sin(math.pi / 4) + y * math.cos(math.pi / 4)
+    # if x < centerX and y > centerY:
+    #     return "bottomleft"
+    # if rotatedX >= centerX and rotatedY >= centerY:
+    #     return "topRight"
+    # elif rotatedX < centerX and rotatedY >= centerY:
+    #     return "right"
+    # elif rotatedX < centerX and rotatedY < centerY:
+    #     return "bottem"
+    # else:
+    #     return "bottomRight"
+
+
+
+
+def screen_to_world(screen_x, screen_y): #convert pixel location to tile location
+    world_x = (screen_x / WIDTH ) * 29
+    world_y = (screen_y / HEIGHT) * 16
     return [world_x, world_y]
+
 running = True  # Boolean variable to control the game loop
 while running: # Loop that runs while the game is running
     for event in pygame.event.get(): # Loop that gets all the events that happen in the game
@@ -75,46 +94,25 @@ while running: # Loop that runs while the game is running
     keys = pygame.key.get_pressed() # Get the pressed keys
     player_velocity.x = (keys[pygame.K_RIGHT] - keys[pygame.K_LEFT]) * 3 # Get the horizontal velocity of the player's car
     player_velocity.y = (keys[pygame.K_DOWN] - keys[pygame.K_UP]) * 3 # Get the vertical velocity of the player's car
-
-    # Check if the player's car is colliding with the road
-    new_player_rect = player_car_rect.move(player_velocity) # Get the new position of the player's car
-    # for x in range(int(new_player_rect.left / scaled_tilewidth), int(new_player_rect.right / scaled_tilewidth)):
-    #     for y in range(int(new_player_rect.top / scaled_tileheight), int(new_player_rect.bottom / scaled_tileheight)):
-    x = (player_car_rect.center[0])
-    y = (player_car_rect.center[1])
-    x = math.floor(screen_to_world(x, y)[0])
-    y = math.floor(screen_to_world(x, y)[1])
-    xivo = screen_to_world(x * 29, y * 16)[0]
-    yivo = screen_to_world(x * 29, y * 16)[1]
-    print("Y=" ,yivo)
-    print("x=" ,xivo)
-    tile_layer = tmx_map.get_layer_by_name("BORDERS")
-    tile = tile_layer.data[y][x]
-    OUCH = False
-    if tile == COLLISION_TILE_ID:
-        OUCH = True
-        player_velocity.x = 0
-        player_velocity.y = 0
+            
     
-        if xivo >= x and OUCH:
-            player_velocity.x = 1
-            OUCH = False
-        elif xivo <= x and OUCH:
-            player_velocity.x = -1
-            OUCH = False
-        if yivo >= y and OUCH:
-            player_velocity.y = 1
-            OUCH = False
-        elif yivo <= y and OUCH:
-            player_velocity.y = -1
-            OUCH = False
-
-       
-
-
-    # Move the player's car
+            
+    previousLocation = (player_car_rect.x, player_car_rect.y) # grabs location before collision
+    
     player_car_rect.x += player_velocity.x
     player_car_rect.y += player_velocity.y
+
+    tileX = math.floor(screen_to_world(player_car_rect.x, player_car_rect.y)[0])
+    tileY = math.floor(screen_to_world(player_car_rect.x, player_car_rect.y)[1])
+    xivo = screen_to_world(player_car_rect.x, player_car_rect.y)[0]
+    yivo = screen_to_world(player_car_rect.x, player_car_rect.y)[1]
+    print(f"x: {xivo:.2f} y: {yivo:.2f}, tileX: {tileX} tileY: {tileY}")
+    
+    tile_layer = tmx_map.get_layer_by_name("BORDERS")
+    tile = tile_layer.data[tileY][tileX] # gets current tile location
+    if tile == COLLISION_TILE_ID: # checks if current tile location is allowed
+        player_car_rect.x = previousLocation[0] #revert to previous state 
+        player_car_rect.y = previousLocation[1] #revert to previous state 
 
     # Check if the player's car is colliding with the road
     if player_velocity.length() > 0: # If the player's car is moving
@@ -133,7 +131,7 @@ while running: # Loop that runs while the game is running
             screen.blit(scaled_image, (x * scaled_tilewidth, y * scaled_tileheight))  # Draw the image
 
     # Draw the player's car
-    rotated_rect = rotated_car_image.get_rect(center=player_car_rect.center)  # Get the rectangle of the rotated car image
+    rotated_rect = rotated_car_image.get_rect(center=(player_car_rect.x, player_car_rect.y))  # Get the rectangle of the rotated car image
     screen.blit(rotated_car_image, rotated_rect.topleft)  # Draw the rotated car image
 
     # Update the display
@@ -141,6 +139,5 @@ while running: # Loop that runs while the game is running
 
     # Set the FPS
     clock.tick(FPS)  # Set the FPS
-
 pygame.quit() # Quit pygame
 sys.exit() # Quit the program
