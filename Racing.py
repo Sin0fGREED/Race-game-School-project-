@@ -42,7 +42,7 @@ scaled_height = tmx_map.height * scaled_tileheight  # Calculate the scaled heigh
 # Create a surface for the scaled map
 original_car_image = pygame.Surface((8, 8))  # Create a surface for the original car image
 original_car_image.fill(CAR_COLOR)  # Fill the surface with the car color
-scaled_car_image = pygame.transform.scale(original_car_image, (5, 5))  # Scale the car image
+scaled_car_image = pygame.transform.scale(original_car_image, (13, 10))  # Scale the car image
 
 # Create a rectangle for the player's car
 player_car_rect = scaled_car_image.get_rect()  # Create a rectangle for the player's car
@@ -54,7 +54,7 @@ player_angle = 0  # Initial angle of the player's car
 
 # Load music and set volume
 pygame.mixer.music.load('Music.wav')  # Load music
-pygame.mixer.music.set_volume(0)  # 15% volume (0 to 1.0)
+pygame.mixer.music.set_volume(0.15)  # 15% volume (0 to 1.0)
 
 # Start playing music (you can specify the number of loops)
 pygame.mixer.music.play(-1)  # -1 means play indefinitely
