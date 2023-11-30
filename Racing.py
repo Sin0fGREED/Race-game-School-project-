@@ -57,7 +57,7 @@ scaled_car_image = pygame.transform.scale(original_car_image, (40, 20))  # Scale
 # Create a rectangle for the player's car
 player_car_rect = scaled_car_image.get_rect()  # Create a rectangle for the player's car
 player_car_rect.x = 150
-player_car_rect.y = 85
+player_car_rect.y = 135
 
 player_velocity = pygame.Vector2(0, 0)  # Initial velocity of the player's car
 player_angle = 0  # Initial angle of the player's car
@@ -70,7 +70,7 @@ pygame.mixer.music.set_volume(0)  # 15% volume (0 to 1.0)
 pygame.mixer.music.play(-1)  # -1 means play indefinitely
 
 # Tile ID for collision (the tile ID is 253)
-COLLISION_TILE_ID = 83  # Tile ID for collision (the tile ID is 253)
+COLLISION_TILE_ID = 8  # Tile ID for collision (the tile ID is 253)
 
 def screen_to_world(screen_x, screen_y): #convert pixel location to tile location
     world_x = (screen_x / WIDTH ) * 29
