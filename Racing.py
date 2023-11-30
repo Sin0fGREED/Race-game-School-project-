@@ -24,6 +24,12 @@ img = font.render('press ENTER to start', True, BLUE)
 imgRect = img.get_rect()
 imgRect.center = (WIDTH // 2, HEIGHT // 2)
 backgrounds = pygame.image.load("./mainMenu/car.jpg")
+lights = pygame.image.load("./mainMenu/lights.jpg")
+clock = pygame.time.Clock()
+counter = 5
+timer_event = pygame.USEREVENT+1
+text = font.render(str(counter), True, (255, 0, 0))
+pygame.time.set_timer(timer_event, 1000)
 drag = 0.04
 # Create the game window
 screen = pygame.display.set_mode((WIDTH, HEIGHT))  # Set the size of the game window
@@ -58,7 +64,7 @@ player_angle = 0  # Initial angle of the player's car
 
 # Load music and set volume
 pygame.mixer.music.load('Music.wav')  # Load music
-pygame.mixer.music.set_volume(0.15)  # 15% volume (0 to 1.0)
+pygame.mixer.music.set_volume(0)  # 15% volume (0 to 1.0)
 
 # Start playing music (you can specify the number of loops)
 pygame.mixer.music.play(-1)  # -1 means play indefinitely
@@ -77,10 +83,17 @@ checkpoint2 = False
 checkpoint3 = False
 checkpoint4 = False
 game = 0
+clock.tick(60)
 while running: # Loop that runs while the game is running
     for event in pygame.event.get(): # Loop that gets all the events that happen in the game
         if event.type == pygame.QUIT: # If the user clicks on the close button
             running = False # Set running to False to exit the game loop
+        elif event.type == timer_event and game == 2:
+            counter -= 1
+            text = font.render(str(counter), True, (255, 0, 0))
+            if counter == 0:
+                timer_event = False
+                game = 1
     if game == 1:
         # Get the pressed keys
         keys = pygame.key.get_pressed() # Get the pressed keys
@@ -164,9 +177,14 @@ while running: # Loop that runs while the game is running
         screen.blit(img, imgRect)
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RETURN]:
-            game = 1
+            game = 2
         pygame.display.flip()
         clock.tick(FPS)
+    elif game == 2:
+        screen.blit(lights, (0,0))
+        text_rect = text.get_rect(center = screen.get_rect().center)
+        screen.blit(text, text_rect)
+        pygame.display.flip()
         
 pygame.quit() # Quit pygame
 sys.exit() # Quit the program
