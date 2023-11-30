@@ -58,7 +58,7 @@ player_angle = 0  # Initial angle of the player's car
 
 # Load music and set volume
 pygame.mixer.music.load('Music.wav')  # Load music
-pygame.mixer.music.set_volume(0)  # 15% volume (0 to 1.0)
+pygame.mixer.music.set_volume(0.15)  # 15% volume (0 to 1.0)
 
 # Start playing music (you can specify the number of loops)
 pygame.mixer.music.play(-1)  # -1 means play indefinitely
