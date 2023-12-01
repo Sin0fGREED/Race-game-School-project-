@@ -31,6 +31,9 @@ timer_event = pygame.USEREVENT+1
 text = font.render(str(counter), True, (255, 0, 0))
 pygame.time.set_timer(timer_event, 1000)
 drag = 0.04
+other_car_speed = 4
+target_position = pygame.Vector2(1310, 55)
+is_moving_to_target = True
 # Create the game window
 screen = pygame.display.set_mode((WIDTH, HEIGHT))  # Set the size of the game window
 pygame.display.set_caption("Formula 1 Racing Course")  # Set the title of the game window
@@ -54,10 +57,18 @@ scaled_height = tmx_map.height * scaled_tileheight  # Calculate the scaled heigh
 original_car_image = pygame.image.load("./Vehicles/CARS.png")  # Create a surface for the original car image
 scaled_car_image = pygame.transform.scale(original_car_image, (40, 20))  # Scale the car image
 
+ai_car_image = pygame.image.load("./Vehicles/aiCARS.png")  # Create a surface for the original car image
+ai_scaled_car_image = pygame.transform.scale(ai_car_image, (40, 20))
+
 # Create a rectangle for the player's car
 player_car_rect = scaled_car_image.get_rect()  # Create a rectangle for the player's car
 player_car_rect.x = 150
 player_car_rect.y = 85
+
+other_car_rect = ai_scaled_car_image.get_rect()  # Create a rectangle for the other car
+other_car_rect.x = 150
+other_car_rect.y = 55
+
 
 player_velocity = pygame.Vector2(0, 0)  # Initial velocity of the player's car
 player_angle = 0  # Initial angle of the player's car
@@ -83,7 +94,11 @@ checkpoint2 = False
 checkpoint3 = False
 checkpoint4 = False
 game = 0
+step1 = False
+step2 = False
+step3 = False
 clock.tick(60)
+aiwin = False
 while running: # Loop that runs while the game is running
     for event in pygame.event.get(): # Loop that gets all the events that happen in the game
         if event.type == pygame.QUIT: # If the user clicks on the close button
@@ -124,7 +139,7 @@ while running: # Loop that runs while the game is running
         tileY = math.floor(screen_to_world(player_car_rect.x, player_car_rect.y)[1])
         xivo = screen_to_world(player_car_rect.x, player_car_rect.y)[0]
         yivo = screen_to_world(player_car_rect.x, player_car_rect.y)[1]
-        print(f"x: {xivo:.2f} y: {yivo:.2f}, tileX: {tileX} tileY: {tileY}")
+        # print(f"x: {xivo:.2f} y: {yivo:.2f}, tileX: {tileX} tileY: {tileY}")
         
         tile_layer = tmx_map.get_layer_by_name("BORDERS")
         tile = tile_layer.data[tileY][tileX] # gets current tile location
@@ -167,6 +182,61 @@ while running: # Loop that runs while the game is running
         # Draw the player's car
         rotated_rect = rotated_car_image.get_rect(center=(player_car_rect.x, player_car_rect.y))  # Get the rectangle of the rotated car image
         screen.blit(rotated_car_image, rotated_rect.topleft)  # Draw the rotated car image
+
+        if is_moving_to_target:
+            direction = target_position - pygame.Vector2(other_car_rect.x, other_car_rect.y)
+            
+            # Check if the direction vector has a non-zero length before normalizing
+            if direction.length() > 0:
+                direction.normalize_ip()  # Normalize the direction vector
+
+            # Update the position of the other car based on the direction and speed
+            other_car_rect.x += direction.x * other_car_speed
+            other_car_rect.y += direction.y * other_car_speed
+
+            # Check if the other car has reached the target position
+            
+            print(f"x: {other_car_rect.x} y: {other_car_rect.y}")
+            if other_car_speed == 4:
+                if other_car_rect.x == 1310:
+                    is_moving_to_target = False  # Stop moving to the current target
+                    target_position = pygame.Vector2(1310, 451)
+                    step1 = True
+                    is_moving_to_target = True  # Start moving to the new target
+                if other_car_rect.y == 451:
+                    target_position = pygame.Vector2(1100, 450)
+                    step2 = True
+                if other_car_rect.x == 1102 and step1:
+                    target_position = pygame.Vector2(1100, 650)
+                if other_car_rect.y == 650 and step1:
+                    target_position = pygame.Vector2(880, 650)
+                if other_car_rect.x == 880 and step1:
+                    target_position = pygame.Vector2(880, 390)
+                if other_car_rect.y == 390 and step1 and step2:
+                    target_position = pygame.Vector2(350, 390)
+                if other_car_rect.x == 352 and step1 and step2:
+                    target_position = pygame.Vector2(350, 200)
+                if other_car_rect.y == 202 and step1 and step2:
+                    target_position = pygame.Vector2(50, 200)
+                if other_car_rect.x == 50 and step1 and step2:
+                    target_position = pygame.Vector2(50, 55)
+                if other_car_rect.y == 52 and step1 and step2:
+                    target_position = pygame.Vector2(120, 55)
+                    screen.blit(backgrounds, (0,0))
+                    screen.blit(img, imgRect)
+                    keys = pygame.key.get_pressed()
+                    if keys[pygame.K_RETURN]:
+                        exit()
+                    pygame.display.flip()
+                
+                
+            
+            
+
+
+
+        # Draw the other car without rotating
+        screen.blit(scaled_car_image, other_car_rect.topleft)
 
         # Update the display
         pygame.display.flip()  # Update the display
