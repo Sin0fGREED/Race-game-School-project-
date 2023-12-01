@@ -1,3 +1,4 @@
+from tracemalloc import start
 import pygame
 import sys
 import pytmx
@@ -15,7 +16,8 @@ ROAD_COLOR = (100, 100, 100)
 MAP_SCALE = 3
 BLUE = (255, 255, 255)
 font = pygame.font.SysFont(None, 100)
-img = font.render('press ENTER to start', True, BLUE)
+text_home = ("""Press ENTER to start. If you touch the wall the timer will get faster.""")
+img = font.render(text_home, True, BLUE)
 imgRect = img.get_rect()
 imgRect.center = (WIDTH // 2, HEIGHT // 2)
 backgrounds = pygame.image.load("./mainMenu/car.jpg")
@@ -34,6 +36,10 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Formula 1 Racing Course")
 
 clock = pygame.time.Clock()
+
+frame_rate = 60
+frame_count = 0
+start_time = 0
 
 tmx_map = pytmx.load_pygame('Road.tmx')
 road_layers = [layer for layer in tmx_map.visible_layers if isinstance(layer, pytmx.TiledTileLayer)]
@@ -92,6 +98,8 @@ while running:
                 game = 1
 
     if game == 1:
+        frame_count += 1
+
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_RIGHT]:
@@ -134,6 +142,7 @@ while running:
             exit()
 
         if tile == COLLISION_TILE_ID:
+            frame_count += 2
             player_car_rect.x = previousLocation[0]
             player_car_rect.y = previousLocation[1]
 
@@ -194,6 +203,9 @@ while running:
                 if other_car_rect.y == 52 and step1 and step2 and step3:
                     target_position = pygame.Vector2(120, 55)
                     exit()
+        # Timer display
+        text = font.render(f'Time: {frame_count // frame_rate:02}:{frame_count % frame_rate:02}', True, (255, 255, 0))
+        screen.blit(text, [6, 6])
 
         pygame.display.flip()
         clock.tick(FPS)
@@ -201,6 +213,7 @@ while running:
     elif game == 0:
         screen.blit(backgrounds, (0, 0))
         screen.blit(img, imgRect)
+        
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RETURN]:
             game = 2
