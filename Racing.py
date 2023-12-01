@@ -89,12 +89,13 @@ play = False
 
 
 win_sound = pygame.mixer.Sound("win.wav")
+lose_sound = pygame.mixer.Sound("lose.wav")
 pygame.mixer.music.load("Music.wav")
 pygame.mixer.music.play(-1)
 pygame.mixer.music.set_volume(0.15)
 
 
-win_sound.set_volume(0.15)
+win_sound.set_volume(2)
 
 
 while running:
@@ -248,6 +249,8 @@ while running:
         turn = 1
     elif game == 4:
         screen.blit(lose, (0, 0))
+        lose_sound.play()
+        lose_sound.set_volume(5)
         pygame.display.flip()
         turn = 1
 
