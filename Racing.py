@@ -161,7 +161,7 @@ while running:
             other_car_rect.x += direction.x * other_car_speed
             other_car_rect.y += direction.y * other_car_speed
 
-            angle = direction.angle_to(pygame.Vector2(1, 0))
+            angle = math.degrees(math.atan2(direction.y, direction.x))
             rotated_ai_car_image = pygame.transform.rotate(ai_scaled_car_image, -angle)
             rotated_ai_rect = rotated_ai_car_image.get_rect(center=(other_car_rect.centerx, other_car_rect.centery))
 
