@@ -5,7 +5,7 @@ import pytmx
 import math
 import pygame.mixer
 from vector2d import Vector2D
-
+import os
 pygame.init()
 pygame.mixer.init()
 
@@ -15,8 +15,8 @@ WHITE = (255, 255, 255)
 ROAD_COLOR = (100, 100, 100)
 MAP_SCALE = 3
 BLUE = (255, 255, 255)
-font = pygame.font.SysFont(None, 100)
-text_home = ("""Press ENTER to start. If you touch the wall the timer will get faster.""")
+font = pygame.font.SysFont(None, 50)
+text_home = ("""Press ENTER to start. To win you must complete 2 laps of the track.""")
 img = font.render(text_home, True, BLUE)
 imgRect = img.get_rect()
 imgRect.center = (WIDTH // 2, HEIGHT // 2)
@@ -86,12 +86,19 @@ step1 = False
 step2 = False
 step3 = False
 play = False
-pygame.mixer.music.load('win.wav')
+
+
+win_sound = pygame.mixer.Sound("win.wav")
+pygame.mixer.music.load("Music.wav")
+pygame.mixer.music.play(-1)
 pygame.mixer.music.set_volume(0.15)
+
+
+win_sound.set_volume(0.15)
+
+
 while running:
-    if play:
-        pygame.mixer.music.play()
-        play = False
+       
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -101,10 +108,12 @@ while running:
             if counter == 0:
                 timer_event = False
                 game = 1
-
+                pygame.mixer.music.load("drive.wav")
+                pygame.mixer.music.play(-1)
+                pygame.mixer.music.set_volume(0.15)
     if game == 1:
         frame_count += 1
-
+        
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_RIGHT]:
@@ -130,6 +139,7 @@ while running:
         tile_layer = tmx_map.get_layer_by_name("BORDERS")
         tile = tile_layer.data[tileY][tileX]
 
+
         if tileX == 10 and tileY == 1:
             print("checkpoint 1 achieved")
             checkpoint1 = True
@@ -144,7 +154,6 @@ while running:
             checkpoint4 = True
         if tileX == 1 and tileY == 1 and checkpoint1 and checkpoint2 and checkpoint3 and checkpoint4:
             print("finished achieved")
-            play = True
             game = 3
 
         if tile == COLLISION_TILE_ID:
@@ -233,6 +242,8 @@ while running:
         pygame.display.flip()
     elif game == 3:
         screen.blit(victory, (0, 0))
+        pygame.mixer.music.stop()
+        win_sound.play()
         pygame.display.flip()
         turn = 1
     elif game == 4:
