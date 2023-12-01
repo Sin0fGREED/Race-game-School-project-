@@ -1,3 +1,4 @@
+from tracemalloc import start
 import pygame
 import sys
 import pytmx
@@ -34,6 +35,10 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Formula 1 Racing Course")
 
 clock = pygame.time.Clock()
+
+frame_rate = 60
+frame_count = 0
+start_time = 0
 
 tmx_map = pytmx.load_pygame('Road.tmx')
 road_layers = [layer for layer in tmx_map.visible_layers if isinstance(layer, pytmx.TiledTileLayer)]
@@ -92,6 +97,8 @@ while running:
                 game = 1
 
     if game == 1:
+        frame_count += 1
+        
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_RIGHT]:
@@ -199,6 +206,9 @@ while running:
                     if keys[pygame.K_RETURN]:
                         exit()
                     pygame.display.flip()
+        # Timer display
+        text = font.render(f'Time: {frame_count // frame_rate:02}:{frame_count % frame_rate:02}', True, (255, 255, 0))
+        screen.blit(text, [6, 6])
 
         pygame.display.flip()
         clock.tick(FPS)
