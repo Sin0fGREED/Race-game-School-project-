@@ -193,12 +193,7 @@ while running:
                     target_position = pygame.Vector2(50, 55)
                 if other_car_rect.y == 52 and step1 and step2 and step3:
                     target_position = pygame.Vector2(120, 55)
-                    screen.blit(backgrounds, (0, 0))
-                    screen.blit(img, imgRect)
-                    keys = pygame.key.get_pressed()
-                    if keys[pygame.K_RETURN]:
-                        exit()
-                    pygame.display.flip()
+                    exit()
 
         pygame.display.flip()
         clock.tick(FPS)
