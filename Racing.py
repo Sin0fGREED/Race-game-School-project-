@@ -22,6 +22,8 @@ imgRect = img.get_rect()
 imgRect.center = (WIDTH // 2, HEIGHT // 2)
 backgrounds = pygame.image.load("./mainMenu/car.jpg")
 lights = pygame.image.load("./mainMenu/lights.jpg")
+victory = pygame.image.load("./mainMenu/victory.jpeg")
+lose = pygame.image.load("./mainMenu/freddy.png")
 clock = pygame.time.Clock()
 counter = 5
 timer_event = pygame.USEREVENT + 1
@@ -65,9 +67,7 @@ other_car_rect.y = 55
 player_velocity = pygame.Vector2(0, 0)
 player_angle = 0
 
-pygame.mixer.music.load('Music.wav')
-pygame.mixer.music.set_volume(0)
-pygame.mixer.music.play(-1)
+
 
 COLLISION_TILE_ID = 83
 
@@ -85,8 +85,13 @@ game = 0
 step1 = False
 step2 = False
 step3 = False
-
+play = False
+pygame.mixer.music.load('win.wav')
+pygame.mixer.music.set_volume(0.15)
 while running:
+    if play:
+        pygame.mixer.music.play()
+        play = False
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -139,7 +144,8 @@ while running:
             checkpoint4 = True
         if tileX == 1 and tileY == 1 and checkpoint1 and checkpoint2 and checkpoint3 and checkpoint4:
             print("finished achieved")
-            exit()
+            play = True
+            game = 3
 
         if tile == COLLISION_TILE_ID:
             frame_count += 2
@@ -202,7 +208,7 @@ while running:
                     target_position = pygame.Vector2(50, 55)
                 if other_car_rect.y == 52 and step1 and step2 and step3:
                     target_position = pygame.Vector2(120, 55)
-                    exit()
+                    game = 4
         # Timer display
         text = font.render(f'Time: {frame_count // frame_rate:02}:{frame_count % frame_rate:02}', True, (255, 255, 0))
         screen.blit(text, [6, 6])
@@ -225,6 +231,14 @@ while running:
         text_rect = text.get_rect(center=screen.get_rect().center)
         screen.blit(text, text_rect)
         pygame.display.flip()
+    elif game == 3:
+        screen.blit(victory, (0, 0))
+        pygame.display.flip()
+        turn = 1
+    elif game == 4:
+        screen.blit(lose, (0, 0))
+        pygame.display.flip()
+        turn = 1
 
 pygame.quit()
 sys.exit()
