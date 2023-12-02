@@ -30,7 +30,7 @@ timer_event = pygame.USEREVENT + 1
 text = font.render(str(counter), True, (255, 0, 0))
 pygame.time.set_timer(timer_event, 1000)
 drag = 0.04
-other_car_speed = 4
+other_car_speed = 0
 target_position = pygame.Vector2(1310, 55)
 is_moving_to_target = True
 
@@ -81,6 +81,11 @@ checkpoint1 = False
 checkpoint2 = False
 checkpoint3 = False
 checkpoint4 = False
+checkpoint5 = False
+checkpoint6 = False
+checkpoint7 = False
+checkpoint8 = False
+
 game = 0
 step1 = False
 step2 = False
@@ -97,7 +102,7 @@ pygame.mixer.music.set_volume(0.15)
 
 win_sound.set_volume(2)
 
-
+laps = 0
 while running:
        
     for event in pygame.event.get():
@@ -154,7 +159,22 @@ while running:
             print("checkpoint 4 achieved")
             checkpoint4 = True
         if tileX == 1 and tileY == 1 and checkpoint1 and checkpoint2 and checkpoint3 and checkpoint4:
-            print("finished achieved")
+            print("lap 1 achieved")
+            laps = 1
+        if tileX == 2 and tileY == 1 and laps == 1:
+            print("checkpoint 5 achieved")
+            checkpoint5 = True
+        if tileX == 27 and tileY == 9 and laps == 1 and checkpoint5:
+            print("checkpoint 5 achieved")
+            checkpoint6 = True
+        if tileX == 18 and tileY == 8 and laps == 1 and checkpoint6:
+            print("checkpoint 5 achieved")
+            checkpoint7 = True
+        if tileX == 1 and tileY == 4 and laps == 1 and checkpoint7:
+            print("checkpoint 5 achieved")
+            checkpoint8 = True
+        if tileX == 1 and tileY == 1 and laps == 1 and checkpoint8 and checkpoint7 and checkpoint6 and checkpoint5:
+            print("victory")
             game = 3
 
         if tile == COLLISION_TILE_ID:
@@ -218,7 +238,9 @@ while running:
                     target_position = pygame.Vector2(50, 55)
                 if other_car_rect.y == 52 and step1 and step2 and step3:
                     target_position = pygame.Vector2(120, 55)
-                    game = 4
+                if other_car_rect.x == 120 and step1 and step2 and step3:
+                    target_position = pygame.Vector2(120, 55)
+                    
         # Timer display
         text = font.render(f'Time: {frame_count // frame_rate:02}:{frame_count % frame_rate:02}', True, (255, 255, 0))
         screen.blit(text, [6, 6])
