@@ -151,11 +151,9 @@ while running:
 
         tileX = math.floor(screen_to_world(player_car_rect.x, player_car_rect.y)[0])
         tileY = math.floor(screen_to_world(player_car_rect.x, player_car_rect.y)[1])
-        print(tileX, tileY)
 
         tile_layer = tmx_map.get_layer_by_name("BORDERS")
         tile = tile_layer.data[tileY][tileX]
-        print (tile)
 
         if tileX == 10 and tileY == 1:
             print("checkpoint 1 achieved")
@@ -319,7 +317,7 @@ while running:
 
                     
         # Timer display
-        text = fontTimer.render(f'Time: {frame_count // frame_rate:02}:{frame_count % frame_rate:02}', True, (0, 0, 0))
+        text = fontTimer.render(f'Time: {frame_count // frame_rate:02}:{frame_count % frame_rate:02}', True, (0,0,0))
         screen.blit(text, [6, 6])
 
         pygame.display.flip()
@@ -351,7 +349,7 @@ while running:
         font_size = 120
         font = pygame.font.Font(None, font_size)
         text_rect = text.get_rect(center=screen.get_rect().center)
-        text = fontTimer.render(f'Time: {frame_count // frame_rate:02}:{frame_count % frame_rate:02}', True, (0, 0, 0))
+        text = fontTimer.render(f'Time: {frame_count // frame_rate:02}:{frame_count % frame_rate:02}', True, (10, 255, 155))
         screen.blit(text, text_rect,)
         pygame.display.flip()
         turn = 1
