@@ -70,7 +70,7 @@ player_angle = 0
 
 
 
-COLLISION_TILE_ID = 83
+COLLISION_TILE_ID = 148
 
 def screen_to_world(screen_x, screen_y):
     world_x = (screen_x / WIDTH) * 29
@@ -137,10 +137,11 @@ while running:
 
         tileX = math.floor(screen_to_world(player_car_rect.x, player_car_rect.y)[0])
         tileY = math.floor(screen_to_world(player_car_rect.x, player_car_rect.y)[1])
+        print(tileX, tileY)
 
         tile_layer = tmx_map.get_layer_by_name("BORDERS")
         tile = tile_layer.data[tileY][tileX]
-
+        print (tile)
 
         if tileX == 10 and tileY == 1:
             print("checkpoint 1 achieved")
