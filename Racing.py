@@ -16,6 +16,7 @@ ROAD_COLOR = (100, 100, 100)
 MAP_SCALE = 3
 BLUE = (255, 255, 255)
 font = pygame.font.SysFont(None, 50)
+font_size = 50
 text_home = ("""Press ENTER to start. To win you must complete 2 laps of the track.""")
 img = font.render(text_home, True, BLUE)
 imgRect = img.get_rect()
@@ -245,6 +246,11 @@ while running:
         screen.blit(victory, (0, 0))
         pygame.mixer.music.stop()
         win_sound.play()
+        font_size = 120
+        font = pygame.font.Font(None, font_size)
+        text_rect = text.get_rect(center=screen.get_rect().center)
+        text = font.render(f'Time: {frame_count // frame_rate:02}:{frame_count % frame_rate:02}', True, (255, 255, 0))
+        screen.blit(text, text_rect,)
         pygame.display.flip()
         turn = 1
     elif game == 4:
