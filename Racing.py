@@ -15,9 +15,10 @@ WHITE = (255, 255, 255)
 ROAD_COLOR = (100, 100, 100)
 MAP_SCALE = 3
 BLUE = (255, 255, 255)
-font = pygame.font.SysFont(None, 50)
+font = pygame.font.SysFont(None, 39)
+fontTimer = pygame.font.SysFont(None, 50)
 font_size = 50
-text_home = ("""Press ENTER to start. To win you must complete 2 laps of the track.""")
+text_home = ("""Press ENTER for hard mode and BACKSPACE for easy mode. To win you must complete 3 laps of the track.""")
 img = font.render(text_home, True, BLUE)
 imgRect = img.get_rect()
 imgRect.center = (WIDTH // 2, HEIGHT // 2)
@@ -28,11 +29,12 @@ lose = pygame.image.load("./mainMenu/freddy.png")
 clock = pygame.time.Clock()
 counter = 5
 timer_event = pygame.USEREVENT + 1
-text = font.render(str(counter), True, (255, 0, 0))
+text = fontTimer.render(str(counter), True, (255, 0, 0))
 pygame.time.set_timer(timer_event, 1000)
-drag = 0.04
-other_car_speed = 0
 target_position = pygame.Vector2(1310, 55)
+drag = 0.04
+other_car_speed = 2
+
 is_moving_to_target = True
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -86,11 +88,17 @@ checkpoint5 = False
 checkpoint6 = False
 checkpoint7 = False
 checkpoint8 = False
+checkpoint9 = False
+checkpoint10 = False
+checkpoint11 = False
+checkpoint12 = False
+
 
 game = 0
 step1 = False
 step2 = False
 step3 = False
+step5 = False
 play = False
 
 
@@ -98,12 +106,13 @@ win_sound = pygame.mixer.Sound("win.wav")
 lose_sound = pygame.mixer.Sound("lose.wav")
 pygame.mixer.music.load("Music.wav")
 pygame.mixer.music.play(-1)
-pygame.mixer.music.set_volume(0.15)
+pygame.mixer.music.set_volume(0)
 
 
 win_sound.set_volume(2)
 
 laps = 0
+lapsai = 0
 while running:
        
     for event in pygame.event.get():
@@ -117,7 +126,7 @@ while running:
                 game = 1
                 pygame.mixer.music.load("drive.wav")
                 pygame.mixer.music.play(-1)
-                pygame.mixer.music.set_volume(0.15)
+                pygame.mixer.music.set_volume(0)
     if game == 1:
         frame_count += 1
         
@@ -166,15 +175,30 @@ while running:
             print("checkpoint 5 achieved")
             checkpoint5 = True
         if tileX == 27 and tileY == 9 and laps == 1 and checkpoint5:
-            print("checkpoint 5 achieved")
+            print("checkpoint 6 achieved")
             checkpoint6 = True
         if tileX == 18 and tileY == 8 and laps == 1 and checkpoint6:
-            print("checkpoint 5 achieved")
+            print("checkpoint 7 achieved")
             checkpoint7 = True
         if tileX == 1 and tileY == 4 and laps == 1 and checkpoint7:
-            print("checkpoint 5 achieved")
+            print("checkpoint 8 achieved")
             checkpoint8 = True
-        if tileX == 1 and tileY == 1 and laps == 1 and checkpoint8 and checkpoint7 and checkpoint6 and checkpoint5:
+        if tileX == 1 and tileY == 1 and laps == 1 and checkpoint5 and checkpoint6 and checkpoint7 and checkpoint8:
+            print("lap 2 achieved")
+            laps = 2
+        if tileX == 2 and tileY == 1 and laps == 2:
+            print("checkpoint 9 achieved")
+            checkpoint9 = True
+        if tileX == 27 and tileY == 9 and laps == 2 and checkpoint9 and checkpoint8 and checkpoint4:
+            print("checkpoint 10 achieved")
+            checkpoint10 = True
+        if tileX == 18 and tileY == 8 and laps == 2 and checkpoint10 and checkpoint8 and checkpoint4:
+            print("checkpoint 11 achieved")
+            checkpoint11 = True
+        if tileX == 1 and tileY == 4 and laps == 2 and checkpoint11 and checkpoint8 and checkpoint4:
+            print("checkpoint 12 achieved")
+            checkpoint12 = True
+        if tileX == 1 and tileY == 1 and laps == 2 and checkpoint9 and checkpoint10 and checkpoint11 and checkpoint12:
             print("victory")
             game = 3
 
@@ -212,38 +236,89 @@ while running:
             rotated_ai_rect = rotated_ai_car_image.get_rect(center=(other_car_rect.centerx, other_car_rect.centery))
 
             screen.blit(rotated_ai_car_image, rotated_ai_rect.topleft)
-
+            print(f"x: {other_car_rect.x} y: {other_car_rect.y}")
             if other_car_speed == 4:
-                if other_car_rect.x == 1310:
-                    is_moving_to_target = False
-                    target_position = pygame.Vector2(1310, 451)
-                    step1 = True
-                    is_moving_to_target = True
-                if other_car_rect.y == 451:
-                    target_position = pygame.Vector2(1100, 450)
-                    step2 = True
-                if other_car_rect.x == 1102 and step1:
-                    target_position = pygame.Vector2(1100, 650)
-                if other_car_rect.y == 650 and step1:
-                    target_position = pygame.Vector2(880, 650)
-                    step3 = True
-                if other_car_rect.x == 880 and step1 and step2 and step3:
-                    target_position = pygame.Vector2(880, 390)
-                if other_car_rect.y == 390 and step1 and step2 and step3:
-                    target_position = pygame.Vector2(350, 390)
-                if other_car_rect.x == 352 and step1 and step2 and step3:
-                    target_position = pygame.Vector2(350, 200)
-                if other_car_rect.y == 202 and step1 and step2 and step3:
-                    target_position = pygame.Vector2(50, 200)
-                if other_car_rect.x == 50 and step1 and step2 and step3:
-                    target_position = pygame.Vector2(50, 55)
-                if other_car_rect.y == 52 and step1 and step2 and step3:
-                    target_position = pygame.Vector2(120, 55)
-                if other_car_rect.x == 120 and step1 and step2 and step3:
-                    target_position = pygame.Vector2(120, 55)
+                if lapsai <= 2:
+                    if other_car_rect.x == 1310:
+                        is_moving_to_target = False
+                        target_position = pygame.Vector2(1310, 451)
+                        step1 = True
+                        is_moving_to_target = True
+                    if other_car_rect.y == 451:
+                        target_position = pygame.Vector2(1100, 450)
+                        step2 = True
+                    if other_car_rect.x == 1102 and step1:
+                        target_position = pygame.Vector2(1100, 650)
+                    if other_car_rect.y == 650 and step1:
+                        target_position = pygame.Vector2(880, 650)
+                        step3 = True
+                    if other_car_rect.x == 880 and step1 and step2 and step3:
+                        target_position = pygame.Vector2(880, 390)
+                    if other_car_rect.y == 390 and step1 and step2 and step3:
+                        target_position = pygame.Vector2(350, 390)
+                    if other_car_rect.x == 352 and step1 and step2 and step3:
+                        target_position = pygame.Vector2(350, 200)
+                    if other_car_rect.y == 202 and step1 and step2 and step3:
+                        target_position = pygame.Vector2(50, 200)
+                        step4 = True
+                    if other_car_rect.x == 50 and step1 and step2 and step3 and step4:
+                        target_position = pygame.Vector2(50, 55)
+                    if other_car_rect.y == 52 and step1 and step2 and step3 and step4:
+                        target_position = pygame.Vector2(120, 55)
+                        step5 = True
+                        if lapsai == 2:
+                            game = 4
+                    if other_car_rect.x == 122 and step1 and step2 and step3 and step4 and step5:
+                        target_position = pygame.Vector2(1310, 55)
+                        lapsai += 1
+                        step1 = False
+                        step2 = False
+                        step3 = False
+                        step5 = False
+            elif other_car_speed == 2:
+                if lapsai <= 2:
+                    if other_car_rect.x == 1310:
+                        is_moving_to_target = False
+                        target_position = pygame.Vector2(1310, 451)
+                        step1 = True
+                        is_moving_to_target = True
+                    if other_car_rect.y == 451:
+                        target_position = pygame.Vector2(1100, 450)
+                        step2 = True
+                    if other_car_rect.x == 1102 and step1:
+                        target_position = pygame.Vector2(1100, 650)
+                    if other_car_rect.y == 651 and step1:
+                        target_position = pygame.Vector2(880, 650)
+                        step3 = True
+                    if other_car_rect.x == 880 and step1 and step2 and step3:
+                        target_position = pygame.Vector2(880, 390)
+                    if other_car_rect.y == 390 and step1 and step2 and step3:
+                        target_position = pygame.Vector2(350, 390)
+                    if other_car_rect.x == 352 and step1 and step2 and step3:
+                        target_position = pygame.Vector2(350, 200)
+                    if other_car_rect.y == 202 and step1 and step2 and step3:
+                        target_position = pygame.Vector2(50, 200)
+                        step4 = True
+                    if other_car_rect.x == 51 and step1 and step2 and step3 and step4:
+                        target_position = pygame.Vector2(50, 55)
+                    if other_car_rect.y == 54 and step1 and step2 and step3 and step4:
+                        target_position = pygame.Vector2(120, 55)
+                        step5 = True
+                        if lapsai == 2:
+                            game = 4
+                    if other_car_rect.x == 120 and step1 and step2 and step3 and step4 and step5:
+                        target_position = pygame.Vector2(1310, 55)
+                        lapsai += 1
+                        step1 = False
+                        step2 = False
+                        step3 = False
+                        step5 = False
+
+
+
                     
         # Timer display
-        text = font.render(f'Time: {frame_count // frame_rate:02}:{frame_count % frame_rate:02}', True, (255, 255, 0))
+        text = fontTimer.render(f'Time: {frame_count // frame_rate:02}:{frame_count % frame_rate:02}', True, (0, 0, 0))
         screen.blit(text, [6, 6])
 
         pygame.display.flip()
@@ -255,6 +330,10 @@ while running:
         
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RETURN]:
+            other_car_speed = 4
+            game = 2
+        if keys[pygame.K_BACKSPACE]:
+            other_car_speed = 2
             game = 2
         pygame.display.flip()
         clock.tick(FPS)
@@ -271,7 +350,7 @@ while running:
         font_size = 120
         font = pygame.font.Font(None, font_size)
         text_rect = text.get_rect(center=screen.get_rect().center)
-        text = font.render(f'Time: {frame_count // frame_rate:02}:{frame_count % frame_rate:02}', True, (255, 255, 0))
+        text = fontTimer.render(f'Time: {frame_count // frame_rate:02}:{frame_count % frame_rate:02}', True, (0, 0, 0))
         screen.blit(text, text_rect,)
         pygame.display.flip()
         turn = 1
