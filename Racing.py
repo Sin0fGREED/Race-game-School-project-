@@ -108,7 +108,7 @@ win_sound = pygame.mixer.Sound("win.wav")
 lose_sound = pygame.mixer.Sound("lose.wav")
 pygame.mixer.music.load("Music.wav")
 pygame.mixer.music.play(-1)
-pygame.mixer.music.set_volume(0)
+pygame.mixer.music.set_volume(0.15)
 
 
 win_sound.set_volume(2)
@@ -127,7 +127,7 @@ while running:
                 game = 1
                 pygame.mixer.music.load("drive.wav")
                 pygame.mixer.music.play(-1)
-                pygame.mixer.music.set_volume(0)
+                pygame.mixer.music.set_volume(0.15)
     if game == 1:
         frame_count += 1
         
@@ -348,11 +348,11 @@ while running:
         screen.blit(victory, (0, 0))
         pygame.mixer.music.stop()
         win_sound.play()
-        win_sound.set_volume(0.15)
+        win_sound.set_volume(15)
         font_size = 120
         font = pygame.font.Font(None, font_size)
         text_rect = text.get_rect(center=screen.get_rect().center)
-        text = fontTimer.render(f'Time: {frame_count // frame_rate:02}:{frame_count % frame_rate:02}', True, (0, 0, 0))
+        text = fontTimer.render(f'Time: {frame_count // frame_rate:02}:{frame_count % frame_rate:02}', True, (2, 247, 15))
         screen.blit(text, text_rect,)
         screen.blit(text, text_rect,)
         pygame.display.flip()
@@ -360,7 +360,7 @@ while running:
     elif game == 4:
         screen.blit(lose, (0, 0))
         lose_sound.play()
-        lose_sound.set_volume(0.15)
+        lose_sound.set_volume(15)
         pygame.display.flip()
         turn = 1
 
