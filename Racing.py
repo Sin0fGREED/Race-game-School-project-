@@ -22,6 +22,8 @@ text_home = ("""Press ENTER for hard mode and BACKSPACE for easy mode. To win yo
 img = font.render(text_home, True, BLUE)
 imgRect = img.get_rect()
 imgRect.center = (WIDTH // 2, HEIGHT // 2)
+imgRects = img.get_rect()
+imgRects.center = (WIDTH // 2, HEIGHT // 1.7)
 backgrounds = pygame.image.load("./mainMenu/car.jpg")
 lights = pygame.image.load("./mainMenu/lights.jpg")
 victory = pygame.image.load("./mainMenu/victory.jpeg")
@@ -94,7 +96,7 @@ checkpoint11 = False
 checkpoint12 = False
 
 
-game = 0
+game = 3
 step1 = False
 step2 = False
 step3 = False
@@ -347,17 +349,19 @@ while running:
         screen.blit(victory, (0, 0))
         pygame.mixer.music.stop()
         win_sound.play()
+        win_sound.set_volume(0.15)
         font_size = 120
         font = pygame.font.Font(None, font_size)
         text_rect = text.get_rect(center=screen.get_rect().center)
         text = fontTimer.render(f'Time: {frame_count // frame_rate:02}:{frame_count % frame_rate:02}', True, (0, 0, 0))
+        screen.blit(text, text_rect,)
         screen.blit(text, text_rect,)
         pygame.display.flip()
         turn = 1
     elif game == 4:
         screen.blit(lose, (0, 0))
         lose_sound.play()
-        lose_sound.set_volume(5)
+        lose_sound.set_volume(0.15)
         pygame.display.flip()
         turn = 1
 
