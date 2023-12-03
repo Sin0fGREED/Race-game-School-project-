@@ -74,7 +74,7 @@ player_angle = 0
 
 
 
-COLLISION_TILE_ID = 83
+COLLISION_TILE_ID = 148
 
 def screen_to_world(screen_x, screen_y):
     world_x = (screen_x / WIDTH) * 29
@@ -155,7 +155,7 @@ while running:
 
         tile_layer = tmx_map.get_layer_by_name("BORDERS")
         tile = tile_layer.data[tileY][tileX]
-
+        
 
         if tileX == 10 and tileY == 1:
             print("checkpoint 1 achieved")
