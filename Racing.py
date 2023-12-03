@@ -74,7 +74,7 @@ player_angle = 0
 
 
 
-COLLISION_TILE_ID = 148
+COLLISION_TILE_ID = 83
 
 def screen_to_world(screen_x, screen_y):
     world_x = (screen_x / WIDTH) * 29
@@ -96,7 +96,7 @@ checkpoint11 = False
 checkpoint12 = False
 
 
-game = 3
+game = 0
 step1 = False
 step2 = False
 step3 = False
@@ -116,7 +116,6 @@ win_sound.set_volume(2)
 laps = 0
 lapsai = 0
 while running:
-       
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -156,6 +155,7 @@ while running:
 
         tile_layer = tmx_map.get_layer_by_name("BORDERS")
         tile = tile_layer.data[tileY][tileX]
+
 
         if tileX == 10 and tileY == 1:
             print("checkpoint 1 achieved")
@@ -319,7 +319,7 @@ while running:
 
                     
         # Timer display
-        text = fontTimer.render(f'Time: {frame_count // frame_rate:02}:{frame_count % frame_rate:02}', True, (0,0,0))
+        text = fontTimer.render(f'Time: {frame_count // frame_rate:02}:{frame_count % frame_rate:02}', True, (0, 0, 0))
         screen.blit(text, [6, 6])
 
         pygame.display.flip()
@@ -352,7 +352,7 @@ while running:
         font_size = 120
         font = pygame.font.Font(None, font_size)
         text_rect = text.get_rect(center=screen.get_rect().center)
-        text = fontTimer.render(f'Time: {frame_count // frame_rate:02}:{frame_count % frame_rate:02}', True, (10, 255, 155))
+        text = fontTimer.render(f'Time: {frame_count // frame_rate:02}:{frame_count % frame_rate:02}', True, (0, 0, 0))
         screen.blit(text, text_rect,)
         screen.blit(text, text_rect,)
         pygame.display.flip()
